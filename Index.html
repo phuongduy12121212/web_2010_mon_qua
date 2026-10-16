@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 20/10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0d0814;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Hiệu ứng nền sao */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1;
+        }
+
+        /* Hai nút bấm chính giữa */
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+            margin-bottom: 40px;
+        }
+        .neon-btn {
+            width: 80px;
+            height: 80px;
+            background: #00f3ff;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #00f3ff, 0 0 30px #00f3ff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .neon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Lời chúc / Lời bài hát chạy */
+        .lyrics {
+            position: absolute;
+            bottom: 100px;
+            font-size: 1.2rem;
+            text-align: center;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            padding: 0 20px;
+        }
+
+        /* Màn hình chào ban đầu để bật nhạc */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        #welcome-screen button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #00f3ff;
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00f3ff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Màn hình chờ click để phát nhạc -->
+    <div id="welcome-screen">
+        <h2>Hôm nay tớ nhận lệnh từ Dr D là để...</h2>
+        <button onclick="startExperience()">Nhấn vào đây nhé ✨</button>
+    </div>
+
+    <!-- Nhạc nền (Thay 'song.mp3' bằng link hoặc file nhạc của bạn) -->
+    <audio id="bg-music" loop>
+        <source src="song.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
+    </audio>
+
+    <!-- Giao diện chính -->
+    <div class="buttons-container">
+        <div class="neon-btn"></div>
+        <div class="neon-btn"></div>
+    </div>
+
+    <div class="lyrics" id="lyric-text">ui cậu đẹp quá...</div>
+
+    <script>
+        // Danh sách lời chúc / lời bài hát hiển thị theo thời gian (giây)
+        const timeline = [
+            { time: 0, text: "ui cậu đẹp quá..." },
+            { time: 5, text: "À thì cũng sắp 20/10 rồi..." },
+            { time: 10, text: "nên là tớ muốn..." },
+            { time: 14, text: "chúc cậu thật nhiều sức khỏe 💖" },
+            { time: 18, text: "chúc cậu thật xinh đẹp ✨" },
+            { time: 22, text: "và chúc cậu luôn giữ nụ cười trên môi..." },
+            { time: 28, text: "nhưng những ai khác bên em là..." },
+            { time: 32, text: "nhường đi hết tất cả..." },
+            { time: 36, text: "yêu em chẳng khiến em được vui..." }
+        ];
+
+        const audio = document.getElementById('bg-music');
+        const lyricText = document.getElementById('lyric-text');
+        const welcomeScreen = document.getElementById('welcome-screen');
+
+        function startExperience() {
+            welcomeScreen.style.display = 'none';
+            audio.play().catch(error => console.log("Cần tương tác để phát nhạc"));
+        }
+
+        // Đồng bộ lời bài hát với thời gian chạy của nhạc
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            for (let i = timeline.length - 1; i >= 0; i--) {
+                if (currentTime >= timeline[i].time) {
+                    lyricText.innerText = timeline[i].text;
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
